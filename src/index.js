@@ -23,10 +23,19 @@ app.get('/api/vat-options', (req, res) => {
       res.status(400).json({ error: err.message });
       return;
     }
-    const transformedRows = rows.map(row => ({
-      ...row,
-      key: row.key.replace(/v\d+\.options/, match => match.replace(/\.options$/, ''))
-    }));
+    const transformedRows = rows.map(row => {
+      let parsedValue;
+      try {
+        parsedValue = JSON.parse(row.value);
+      } catch (e) {
+        parsedValue = row.value; // Fallback to original value if parsing fails
+      }
+      return {
+        ...row,
+        key: row.key.replace(/v\d+\.options/, match => match.replace(/\.options$/, '')),
+        value: parsedValue
+      };
+    });
     res.json({
       message: 'success',
       data: transformedRows
