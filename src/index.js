@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 
 // Connect to the SQLite database
-const dbPath = path.resolve(__dirname, 'swingstore.sqlite');
+const dbPath = path.resolve(__dirname, '/Users/touseefliaqat/Downloads/ollinet-15523753/data/agoric/swingstore.sqlite');
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database ' + err.message);
