@@ -23,6 +23,10 @@ app.get('/api/vat-options', (req, res) => {
       res.status(400).json({ error: err.message });
       return;
     }
+    const transformedRows = rows.map(row => ({
+      ...row,
+      key: row.key.replace(/v\d+\.options/, match => match.replace('.options', ''))
+    }));
     res.json({
       message: 'success',
       data: rows
