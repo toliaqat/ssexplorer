@@ -15,6 +15,29 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
+// Endpoint to get rows with keys starting with "vatId.%" and containing "objectId"
+app.get('/api/vats/:vatId/:objectId', (req, res) => {
+  const vatId = req.params.vatId;
+  const objectId = req.params.objectId;
+  const query = `
+    SELECT * FROM kvStore 
+    WHERE key LIKE ? AND (key LIKE ? OR value LIKE ?)
+  `;
+  const keyPattern = `${vatId}.%`;
+  const objectIdPattern = `%${objectId}%`;
+
+  db.all(query, [keyPattern, objectIdPattern, objectIdPattern], (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
 // Endpoint to get rows with keys like "$vatId.vs.%"
 app.get('/api/vatstore/:vatId', (req, res) => {
   const vatId = req.params.vatId;
