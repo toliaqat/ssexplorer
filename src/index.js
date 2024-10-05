@@ -36,14 +36,10 @@ app.get('/api/object', (req, res) => {
       res.status(400).json({ error: err.message });
       return;
     }
-    const filteredRows = rows.filter(row => {
-      const regex = new RegExp(`\\b${objectId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
-      return regex.test(row.key) || regex.test(row.value);
-    });
 
     res.json({
       message: 'success',
-      data: filteredRows
+      data: rows
     });
   });
 });
