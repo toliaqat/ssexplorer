@@ -17,17 +17,21 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Endpoint to search for objectId in key or value column
 app.get('/api/object', (req, res) => {
+  console.log(req.query);
   const objectId = req.query.objectId;
   if (!objectId) {
     res.status(400).json({ error: 'objectId query parameter is required' });
     return;
   }
 
+  console.log(objectId);
   const query = `
-    SELECT * FROM kvStore
+    SELECT * FROM kvStore 
+    WHERE key LIKE ? OR value LIKE ?
   `;
+  const objectPattern = `%${objectId}%`;
 
-  db.all(query, [], (err, rows) => {
+  db.all(query, [objectPattern, objectPattern], (err, rows) => {
     if (err) {
       res.status(400).json({ error: err.message });
       return;
