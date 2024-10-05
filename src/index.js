@@ -24,19 +24,22 @@ app.get('/api/object', (req, res) => {
   }
 
   const query = `
-    SELECT * FROM kvStore 
-    WHERE (key REGEXP ? OR value REGEXP ?)
+    SELECT * FROM kvStore
   `;
-  const objectIdPattern = `\\b${objectId}\\b`;
 
-  db.all(query, [objectIdPattern, objectIdPattern], (err, rows) => {
+  db.all(query, [], (err, rows) => {
     if (err) {
       res.status(400).json({ error: err.message });
       return;
     }
+    const filteredRows = rows.filter(row => {
+      const regex = new RegExp(`\\b${objectId}\\b`);
+      return regex.test(row.key) || regex.test(row.value);
+    });
+
     res.json({
       message: 'success',
-      data: rows
+      data: filteredRows
     });
   });
 });
