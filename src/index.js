@@ -15,6 +15,24 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
+// Endpoint to get rows with keys like "$vatId.vs.%"
+app.get('/api/vat/:vatId', (req, res) => {
+  const vatId = req.params.vatId;
+  const query = "SELECT * FROM kvStore WHERE key LIKE ?";
+  const likePattern = `${vatId}.vs.%`;
+  
+  db.all(query, [likePattern], (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
 // Endpoint to get all VAT options from the kvStore table
 app.get('/api/vats', (req, res) => {
   const query = "SELECT * FROM kvStore WHERE key LIKE 'v%.options'";
