@@ -15,6 +15,32 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
+// Endpoint to search for objectId in key or value column
+app.get('/api/object', (req, res) => {
+  const objectId = req.query.objectId;
+  if (!objectId) {
+    res.status(400).json({ error: 'objectId query parameter is required' });
+    return;
+  }
+
+  const query = `
+    SELECT * FROM kvStore 
+    WHERE (key REGEXP ? OR value REGEXP ?)
+  `;
+  const objectIdPattern = `\\b${objectId}\\b`;
+
+  db.all(query, [objectIdPattern, objectIdPattern], (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
 // Endpoint to get rows with keys starting with "vatId.%" and containing "objectId"
 app.get('/api/vats/:vatId/:objectId', (req, res) => {
   const vatId = req.params.vatId;
