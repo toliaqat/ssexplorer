@@ -16,7 +16,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 // Endpoint to get all VAT options from the kvStore table
-app.get('/api/vat-options', (req, res) => {
+app.get('/api/vats', (req, res) => {
   const query = "SELECT * FROM kvStore WHERE key LIKE 'v%.options'";
   db.all(query, [], (err, rows) => {
     if (err) {
