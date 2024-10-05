@@ -16,7 +16,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 // Endpoint to get rows with keys like "$vatId.vs.%"
-app.get('/api/vat/:vatId', (req, res) => {
+app.get('/api/vatstore/:vatId', (req, res) => {
   const vatId = req.params.vatId;
   const query = "SELECT * FROM kvStore WHERE key LIKE ?";
   const likePattern = `${vatId}.vs.%`;
