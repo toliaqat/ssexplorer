@@ -37,6 +37,11 @@ app.get('/api/object', (req, res) => {
       return;
     }
 
+    const filteredRows = rows.filter(row => {
+      const regex = new RegExp(`${objectId}\\b`);
+      return regex.test(row.key) || regex.test(row.value);
+    });
+
     res.json({
       message: 'success',
       data: rows
