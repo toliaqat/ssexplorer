@@ -25,11 +25,11 @@ app.get('/api/vat-options', (req, res) => {
     }
     const transformedRows = rows.map(row => ({
       ...row,
-      key: row.key.replace(/v\d+\.options/, match => match.replace('.options', ''))
+      key: row.key.replace(/v\d+\.options/, match => match.replace(/\.options$/, ''))
     }));
     res.json({
       message: 'success',
-      data: rows
+      data: transformedRows
     });
   });
 });
