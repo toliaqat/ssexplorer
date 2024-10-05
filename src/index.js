@@ -15,6 +15,21 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 
+// Endpoint to get all rows from the kvStore table
+app.get('/api/kvstore', (req, res) => {
+  const query = 'SELECT * FROM kvStore';
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: 'success',
+      data: rows
+    });
+  });
+});
+
 // Endpoint to get a list of tables in the database
 app.get('/api/tables', (req, res) => {
   const query = `
